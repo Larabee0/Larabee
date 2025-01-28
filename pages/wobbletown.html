@@ -1,0 +1,80 @@
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Wobbletown</title>
+        <!--<link rel="stylesheet" href="/bills-beeby/styles.css"> -->
+        <link rel="stylesheet" href="../styles.css">
+    </head>
+    
+    <body>
+        <div class="footer"> 
+            <div style="float:left; margin-left:1%; margin-right:1%;"> <b>Bills Beeby</b> | 2024</div>
+            <div style="float:right">
+                <div class="footer-link"> 
+                    <a href="mailto:williambeeby7@gmail.com">EMAIL</a>
+                    <img class="icon" src="../images/icons/mail-icon.png">
+                </div>
+                <div class="footer-link"> 
+                    <a href="https://discord.com/users/bills" target="_blank">DISCORD</a>
+                    <img class="icon" src="../images/icons/discord-blue-icon.png">
+                </div>
+                <div class="footer-link"> 
+                    <a href="https://github.com/snezelute" target="_blank">GITHUB</a>
+                    <img class="icon" src="../images/icons/github-icon.png">
+                </div>
+                <div class="footer-link"> 
+                    <a href="https://snezelute.itch.io/" target="_blank">ITCH.IO</a>
+                    <img class="icon" src="../images/icons/itchio-icon.png">
+                </div>
+                <div class="footer-link"> 
+                    <a href="https://www.linkedin.com/in/william-beeby-477405302/" target="_blank">LINKEDIN</a>
+                    <img class="icon" src="../images/icons/linkedin-icon.png">
+                </div>
+            </div>
+        </div>
+
+        <div class="wide-banner">
+            <img src="../images/wobbletown-banner.gif" width="100%">
+        </div>
+
+        <section id="wobbletown-description" class="main-section">
+            <p><b>Engine/Skills Used:</b> Unity3D, C#, HLSL, Unity Shadergraph, Unity Scriptable Render Pipeline</p>
+            <p>
+                <b>Download and play it on itch.io <a href="https://snezelute.itch.io/wobbletown" target="_blank">here</a>!</b>
+                <img class="icon" src="../images/icons/itchio-icon.png">
+            </p>
+            
+            <hr>
+            <p>
+                <b>Wobbletown</b> is a simple diorama that I made to practice using <b>Shaders in Unity</b> within <b>Unity's Scriptable Render Pipeline</b>.
+                I was inspired by <a href="https://www.youtube.com/@uselessgamedev" target="_blank">UselessGameDev</a>'s video on <a href="https://www.youtube.com/watch?v=jlKNOirh66E" target="_blank">"Moebius-style 3D rendering"</a> in <b>Unity</b>, and I wanted to give it a go and put my own spin on it. I learnt a lot during this short project, and enjoyed putting together this small <b>playable diorama</b>!
+            </p>
+            <p>
+                The hand-drawn style outlines are achieved using a shader blitted to the main texture using a <b>custom renderer feature</b>. The shader uses HLSL custom functions to implement <b>edge detection</b> using a <b>Sobel Convolution Filter</b>, within a <b>Shadergraph</b> containing some additional shader logic for thickness, waviness and animation.    
+            </p>
+            <p>
+                The toon shading is implemented using <b>Shadergraph</b> as well. Each fragment's colour is adjusted based on the dot product between the Main Light direction and the face's surface normal. Colours are rounded so that objects only contain a finite number of shades based on a shading factor property, creating a simplistic lighting effect <b>imitating hand drawn cartoons</b>.
+            </p>
+        </section>
+
+        
+        <section id="wobbletown-gallery" class="main-section">
+            <h2>Gallery</h2>
+            <div class="gallery">
+
+                <img class="gallery-screenshot" src="../images/wobbletown-gallery/wobbletown-screenshot-1.png" width="48%">
+
+                <img class="gallery-screenshot" src="../images/wobbletown-gallery/wobbletown-screenshot-2-gifversion.gif" width="45%">
+
+                <video width="80%"controls style="display:block; margin:0 auto;">
+                    <source src="../videos/wobbletown-demo-1.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </section>
+
+    </body>
+
+</html>
