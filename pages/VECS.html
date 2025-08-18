@@ -51,14 +51,59 @@
             
             <hr>
             <p>
-                The planets are an computing artefact I made in the VECS engine I made for a university module called Graphics and Simulation
+                VECS is a 3d game engine written in pure C# (.NET 9.0) using SDL3 as a windower and Vulkan 1.4 as a graphics pipeline. The Engine uses BepuPhysics2 as a physics engine.
             </p>
             <p>
-                VECS engine itself I developed along side the solar system generator. The Enity Component System design is based on Unity Entities and other DOTS packages
+                The planets are an computing artefact I made in the VECS engine for a university module called Graphics and Simulation at the end of 2024
             </p>
             <p>
-                Since submission I have added some GPU-Driven rendering technquies like GPU-Based Fustrum culling, indirect drawing and have in development GPU depth based occulsion culling
+                VECS engine itself I developed along side the artefact. The Enity Component System design is based on Unity Entities and other DOTS packages
             </p>
+            <p>
+                Since compeltetion of hte module I have found I really like working on this engine so have continued to work on it adding features like shader reflection and a physics engine.
+                VECS is in active development and its highly likely the latest version has more features than listed here.
+            </p>
+        </section>
+
+        <section id="-features" class="main-section">
+            <h2>Features</h2>
+            <div class="gallery">
+                <table>
+                    <tr>
+                        <td>
+                            Draw Indirect By Default 
+                        </td>
+                        <td>
+                            GPU Fustrum Culling
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            SPIR-V Shader Reflection (Graphics and Compute shaders)
+                        </td>
+                        <td>
+                            High Performance BepuPhysics engine
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Mikktspace Vertex Tangent Generation
+                        </td>
+                        <td>
+                            Simple ECS Arcitecture
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Assimp and Freeimage/NVTT Asset Importers
+                        </td>
+                        <td>
+                            Real-time Omni-directional Point Light Shadows
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
         </section>
 
         
@@ -77,7 +122,7 @@
                 <img class="gallery-screenshot" src="../images/503mTris.png" width="40%">
 
                 <img class="gallery-screenshot" src="../images/503mTrisFPS.png" width="40%">
-                <p>It ran at 3fps on my old laptop, most impressively it worked</p>
+                <p>It ran at 3fps on my old laptop, but the fact it ran at all was impressive</p>
             </div>
         </section>
 
