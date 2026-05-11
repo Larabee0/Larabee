@@ -132,3 +132,32 @@ a:active{
 .icon {
     width: 20px;
 }
+
+.code-bg{
+    background-color: #1E1E1E;
+}
+
+.code-keyword{
+    color:#569CD6;
+}
+
+.code-member{
+    color:#DCDCDC;
+}
+
+.code-local{
+    color:#9CDCFE;
+}
+
+.code-method{
+    color:#DCDCAA;
+}
+.code-struct{
+    color:#86C691;
+}
+.code-class{
+    color:#4EC9B0;
+}
+.code-number{
+    color:#B5CEA8;
+}
