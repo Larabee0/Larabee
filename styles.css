@@ -81,6 +81,15 @@ a:active{
     margin: 1%;
 }
 
+.gallery-grid{
+    display:grid;
+    grid-template-columns: auto auto;
+}
+
+.gallery-grid-element{
+
+}
+
 .introduction-text {
     width: 90%;
     display: flex;
@@ -94,10 +103,8 @@ a:active{
 
 .banner {
     text-align: center;
-    margin-top: 3cm;
-    margin-bottom: 5cm; 
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .banner-image {
@@ -122,6 +129,10 @@ a:active{
     width: 100%;
     background-color: #7B5D4D;
     color: #FFB579;
+}
+
+.hyper-link{
+    text-decoration: underline;
 }
 
 .footer-link {
