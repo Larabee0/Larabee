@@ -61,7 +61,7 @@ a:active{
     align-items: center;
     margin: 10%;
 
-    font-size: xx-large;
+    font-size: larger;
 }
 
 .main-section {
@@ -72,8 +72,10 @@ a:active{
     margin-top: 3cm;
 }
 
-.gallery {
-    
+.gallery-flex {
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .gallery-screenshot {
@@ -105,6 +107,7 @@ a:active{
     text-align: center;
     margin-left: 10px;
     margin-right: 10px;
+  flex: 0 0 calc(33% - 40px);
 }
 
 .banner-image {
@@ -146,6 +149,8 @@ a:active{
 
 .code-bg{
     background-color: #1E1E1E;
+    white-space: pre-wrap;
+    font-size: 75%;
 }
 
 .code-keyword{

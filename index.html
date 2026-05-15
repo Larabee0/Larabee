@@ -8,7 +8,7 @@
         <!--<link rel="stylesheet" href="styles.css"> -->
     </head>
 
-    <body>
+    <body style="font-size: medium;">
         <div class="footer"> 
             <div style="float:left; margin-left:1%; margin-right:1%;"> <b>William Vickers Hastings</b> | 2026</div>
             <div style="float:right">
@@ -36,73 +36,71 @@
             </div>
         </div>
 
-        <section id="introduction">
+        <section id="introduction" class="main-section">
             <h1>I'm Will aka Larabee</h1>
-            <div class="introduction-text">
+            <div class="introduction-text"  style="display: grid; grid-template-columns: repeat(auto-fill, minmax(50%,186px));" >
                 <p>
                     whoops I slipped and accidentally made a game engine
                 </p>
-                <div>
-                <a href="https://perianth-nixie.tumblr.com/" target="_blank" ><img src="images/Larabee Large Background Small.png" width=400px height=400px style="float:right; padding-left: 100px;"><p style="font-size:9; text-align: end;">Profile Picture Commissioned from Perianth-Nixie</p></a>
+                <div style="display: grid; grid-template-rows: auto auto;">
+                <a href="https://perianth-nixie.tumblr.com/" target="_blank" style="margin-right: 0; margin-left: auto; max-height:20rem; max-width:20rem;">
+                    <img src="images/Larabee Large Background Small.png" style="float:right; padding-left: 100px; height:100%;">
+                </a>
+                
+                <p style="font-size:9; text-align: end;">Profile Picture Commissioned from Perianth-Nixie</p>
                 
                 </div>
             </div>
-            <p style="font-size: 20;">Contact me at <a href="mailto:will.vickershastings@gmail.com">will.vickershastings@gmail.com.</a></p>
+            <p style="font-size: large;">Contact me at <a href="mailto:will.vickershastings@gmail.com">will.vickershastings@gmail.com.</a></p>
         </section>
 
         <section id="skills" class="main-section">
             <h2>Skills</h2>
-            <p>Here is a list of my technical skills I thought worthy of mentioning up top.
+            <p>Most of technical skills I thought worthy of mentioning up top.
             </p>
-
-            <table>
-                <tr>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(33%,186px)); ">
+                <div>
                     <th>Languages</th>
+<pre style="color: whitesmoke; white-space: pre-wrap; margin: 10px;">
+C#
+GLSL (Vulkan Targeting)
+JavaScript
+HTML & CSS
+Less.js(CSS Transpiler)
+C++
+Python
+</pre>
+
+                </div>
+                <div>
                     <th>Engines / Frameworks</th>
+<pre style="color: whitesmoke; white-space: pre-wrap; margin: 10px;">
+Vulkan
+SDL3
+NOESIS GUI
+Unity
+Unity UI Toolkit
+Unity Editor Tools
+Unity Editor UI
+Unity DOTS Suite
+</pre>
+                    
+                </div>
+                <div>
                     <th>Tools & IDEs</th>
-                </tr>
-                <tr>
-                    <td>C#</td>
-                    <td>Vulkan</td>
-                    <td>Visual Studio
-                    </td>
-                </tr>
-                <tr>
-                    <td>GLSL (Vulkan Targeting)</td>
-                    <td>SDL3</td>
-                    <td>Visual Studio Code</td>
-                </tr>
-                <tr>
-                    <td>JavaScript</td>
-                    <td>NOESIS GUI</td>
-                    <td>Git & Github & Github Enterprise</td>
-                </tr>
-                <tr>
-                    <td>HTML & CSS</td>
-                    <td>Unity</td>
-                    <td>RenderDoc</td>
-                </tr>
-                <tr>
-                    <td>Less.js(CSS Transpiler)</td>
-                    <td>Unity UI Toolkit</td>
-                    <td>Blender (terrible at modelling)</td>
-                </tr>
-                <tr>
-                    <td>Handle Bars(HTML/JS)</td>
-                    <td>Unity Editor Tools</td>
-                    <td>LaTeX</td>
-                </tr>
-                <tr>
-                    <td>C++</td>
-                    <td>Unity Editor UI</td>
-                    <td>Microsoft 365 suite (incl Teams)</td>
-                </tr>
-                <tr>
-                    <td>Python</td>
-                    <td>Unity DOTS Suite</td>
-                    <td>Trello</td>
-                </tr>
-              </table>
+<pre style="color: whitesmoke; white-space: pre-wrap; margin: 10px;">
+Visual Studio
+Visual Studio Code
+Git & Github & Github Enterprise
+RenderDoc
+Blender (terrible at modelling)
+LaTeX
+Microsoft 365 suite (incl Teams)
+Trello
+</pre>
+                    
+                </div>
+            </div>
 <hr>
         </section>
 
@@ -127,8 +125,8 @@
 <hr>
         </section>
         <section id="favourite-projects" class="main-section">
-            <h2>Favourite Projects</h2>
-            <div class="gallery-grid">
+            <h2 style="text-align: center;">Favourite Projects</h2>
+            <div style="display:flex; flex-wrap: wrap; justify-content: center;">
             <div id="vecs" class="banner">
                 <a href="pages/VECS.html" target="_blank">
                 <h3>Vulkan ECS Game Engine (VECS)</h3>
@@ -163,7 +161,7 @@ Convex Terrain</h3>
                 
             </div>
             </div>
-            <div style="display:grid;grid-template-columns: auto auto auto;">
+            <div style="display:flex; flex-wrap: wrap; justify-content: center;">
             <div id="foundry-rimtop" class="banner">
                 <a href="pages/RimTop.html" target="_blank">
                 <h3>TTRPG & Foundry VTT System based on RimWorld</h3>
@@ -195,10 +193,10 @@ Convex Terrain</h3>
 <hr>
         </section>
         <section id="other-projects" class="main-section">
-            <h2>Other Projects</h2>
-            <p>I have made variety of game projects over the years at college and at university, by most recent</p>
+            <h2 style="text-align: center;">Other Projects</h2>
+            <p style="text-align: center;">I have made variety of game projects over the years at college and at university, by most recent</p>
 
-            <div style="display:grid;grid-template-columns: auto auto auto;">
+            <div style="display:flex; flex-wrap: wrap; justify-content: center;">
             <div id="nightmorn" class="banner">
                 <a href="pages/Nightmorn.html" target="_blank">
                 <h3>Nightmorn</h3>
@@ -222,15 +220,12 @@ Convex Terrain</h3>
             <div id="mecha-mayhem" class="banner">
                 <a href="pages/MechaMayhem.html" target="_blank">
                 <h3>Mecha Mayhem Fight</h3>
-                    <img class="banner-image" src="images/IMG_1623.png" width="75%">
+                    <img class="banner-image" src="images/MechaMayhem/IMG_1623.png" width="75%">
                 
                 <p>This is our group game from uni 1st year. It's a 4 player local coop mecha PVP game with power-ups.</p>
                 <p>I was lead programmer for this project and developed alot of the core gameplay systems and UI. Additionally I added Wiimote support to Unity for the game because it was fun and weird and the university where encouraging gimmicks</p>
                 </a>
             </div>
-            </div>
-
-            <div style="display:grid;grid-template-columns: auto auto;">
             <div id="mega-fight" class="banner">
                 <a href="pages/MegaFight.html" target="_blank">
                 <h3>Mega Fight</h3>

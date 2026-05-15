@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name='referrer' content='strict-origin-when-cross-origin' />
         <title>Mecha Mayhem</title>
         <link rel="stylesheet" href="../styles.css">
     </head>
@@ -35,39 +36,59 @@
     </div>
 
         <div class="wide-banner">
-            <img src="../images/wobbletown-banner.gif" width="100%">
+            <img class="gallery-screenshot" src="../images/MechaMayhem/Banner.png" width="98%">
+                <iframe width="50%" height="50%" src="https://www.youtube.com/embed/yFwv3mkxuN8" title="Mecha Mayhem Gameplay" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
 
         <section id="-description" class="main-section">
-            <p><b>Skills Used:</b></p>
+            <p><b>Skills Used:</b> C#, Unity, Teamworking</p>
             <p>
-                <b>Download and play it on itch.io <a href="https://snezelute.itch.io/wobbletown" target="_blank">here</a>!</b>
-                <img class="icon" src="../images/icons/itchio-icon.png">
+                <b>Download and play it on itch.io <span class="hyper-link"><a href="https://redbuttonstudios.itch.io/mecha-mayhem" target="_blank">here</a></span>!</b>
+                <img class="icon" src="../images/icons/itchio-icon.png"><br>
+                <b>See the project repo <span class="hyper-link"><a href="https://github.com/Larabee0/Mecha-Mayhem.git" target="_blank">here</a></span>!</b>
+                <img class="icon" src="../images/icons/github-icon.png">
             </p>
             
             <hr>
             <p>
-                
+                MechaMayhem is a 2-4 player local-pvp style game much like wii tanks. This game was made by  a first year team of 8 students + an extra for propmotional art.
             </p>
             <p>
-                
+                The university brief for the project set a number of constraits such as having native controller support, take no longer than 10 minutes to play, and it had to include at least one of six "diversifiers".
             </p>
             <p>
-                
+                These diversifiers were;<br>
+                1. Support 2 player local co-op<br>
+                2. Fit into one screen (fixed camera)<br>
+                3. Contain historically accurate information about a local place or subject<br>
+                4. present educational information suitable for use with a musem or local attractrion.<br>
+                5. Be a digital version of a game which is ususally a physical, for example a computerised version of a TTRP or card game.
+                6. Include alternative physical input devices/copntrollers and/or control external devices (such as lights or other hardware)
             </p>
+            <p>
+                We ended up implementing 1, 2 and 6. With the sixth being the result of me finding a <span class="hyper-link"><a href="https://github.com/Flafla2/Unity-Wiimote.git" target="_blank"> wii remote api for C#/unity on github</a></span> then adding wiimote support to the game one evening just because I thought it was funny.
+            </p>
+            <p>
+                After proving it worked and everyone else on the team also thought it was funny/cool I wrote a much more refined implementation, a custom device for the modern Unity Input System - the code for which can be browsed in the project repo linked above.
+            </p>
+            <p>
+                For this game I built all the UI code behind, the controller system for switching between controllers, the powers, the mechs themselves, loading between levels. The other programmers worked on the map gimmicks like the lava rising on the volcano.
+            </p>
+            <hr>
         </section>
 
         
         <section id="-gallery" class="main-section">
             <h2>Gallery</h2>
-            <div class="gallery">
+            <div class="gallery-flex">
 
-                <img class="gallery-screenshot" src="../images/wobbletown-gallery/wobbletown-screenshot-1.png" width="48%">
+                <img class="gallery-screenshot" src="../images/MechaMayhem/3TsHVk.png" width="48%">
 
-                <img class="gallery-screenshot" src="../images/wobbletown-gallery/wobbletown-screenshot-2-gifversion.gif" width="45%">
+                <img class="gallery-screenshot" src="../images/MechaMayhem/Lv_8L4.png" width="48%">
+                <img class="gallery-screenshot" src="../images/MechaMayhem/N1sSDz.jpg" width="48%">
 
-                <video width="80%"controls style="display:block; margin:0 auto;">
-                    <source src="../videos/wobbletown-demo-1.mp4" type="video/mp4">
+                <video width="48%"controls style="display:block; margin:0 auto;">
+                    <source src="../videos/MechaMayhem/Gam101 Prototype Gameplay Cut-1.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             </div>
