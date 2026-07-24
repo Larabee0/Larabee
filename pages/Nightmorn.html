@@ -47,34 +47,45 @@
             
             <hr>
             <p>
-                Nightmorn is still in active development by myself and the rest of the team at Keeled-Moon I will try to keep this page relatively up to date.
+                Nightmorn was a multiplayer cooperative 2d top down horror game where you fight intelligent super natural monsters using a range of equipment.
+                <br>
+                Nightmorn was the third year group project I worked on with a team of 10 other people, including 3 other programmers.
+                <br>
+                We continued to develop the project for roughly a year after university in an graduate scheme called incubator, which ran out of funding in March and we opted to cease working on the project after that.
+                <br>
+                During the projects course I served as lead programmer and technical director of the company we formed post university until I had to stepdown to health issues in Feburary.
+                <br>
+                The game itself is actually quite fun and the demos are still avaliable on itch.io (linked above)
             </p>
             <p>
-                For this project I serve as lead programmer and netcode arcitect - but most of my in the trentches work is UI programming with Unity UI-Toolkit.
+                For this project I serve as lead programmer and netcode specialise and systems arcitect - but most of my work is UI programming with Unity UI-Toolkit.
             </p>
             <p>
-                I handle nearly all of the backend containing code for Nightmorn the stuff that people don't notice unless it doesn't work. These are things like control rebinding, graphics settings, proper application life cycle.
+                I designed a lot of the main overarching such as the equipment system, the basic entity system that monsters and players inherit from, level life-cycling and loading, the audio system and the view cone system.
             </p>
             <p>
-                <img class="gallery-screenshot" src="../images/NightmornMask.png">
-                One of the more speicalised roles tasks for Nightmorn I have undertake is a custom renderpass for generating a mask for the vision cone effect. The pass rendered the two vision cone components into a texture another pass then blurred then annother used the blurred output as a mask for colouring.
-                <img class="gallery-screenshot" src="../images/NightmornOutput.png">
+                The other programmers specialisied in the general AI arcitecture for the monsters the implementation and tuning of these monsters, and the complicated player animation system.
             </p>
-            
         </section>
 
         
-        <section id="-gallery" class="main-section">
-            <h2>Gallery</h2>
-            <div class="gallery">
+        <section id="-view-system" class="main-section">
+            <h1>The View System</h1>
+            <h2>Theory</h2>
+            <h2>Mesh Generation</h2>
+            <h2>Shader Pass</h2>
 
-                <img class="gallery-screenshot" src="../images/NightmornGettingKilled.gif" width="47%">
+        </section>
+        <section id="-character-equipment">
+            <h1>The Equipment System</h1>
+            <h2>Types of equipment</h2>
+            <h2>Interop with Animations</h2>
+        </section>
 
-                <img class="gallery-screenshot" src="../images/NightmornCharacterSelect.gif" width="47%">
-
-                
-                <img class="gallery-screenshot" src="../images/NightmornGraphicsSettings.png">
-            </div>
+        <section id="-audio-system">
+            <h1>The Audio System</h1>
+            <h2>Types of sounds</h2>
+            <h2>Implementation</h2>
         </section>
 
     </body>
