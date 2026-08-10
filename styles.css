@@ -177,6 +177,17 @@ a:active{
 .code-number{
     color:#B5CEA8;
 }
+.code-interface{
+    color:#B4D794;
+}
+
+.code-control{
+    color:#D8A0DF;
+}
+
+.code-operator{
+    color:#B4B4B4;
+}
 
 .sidenav{
     height: 100%; /* Full-height: remove this if you want "auto" height */

@@ -84,15 +84,147 @@
                 The edges of the cone need to blurr to create a smooth transtion. Monsters need to only appear inside the view cone and be hidden outside it.
             </p>
             <h2>Mesh Generation</h2>
+            <p>
+                One Meshes is generated composed of two islands, a full circle in a small radius around the player, and a pie slice extending a large radius from them. Broadly the same maths can be used for generating both meshes which is done by the job below.
+                The circle/cone meshes just configure some of the input variables differently.
+            </p>
+            <p>
+                The job sets the vertex positions for each far vertex from the center vertex by raycasting against the scene's view objesticle physics layer, this gave our designers fine control over what blocked vision.
+            </p>
+            <p>
+                Since we ported the game to Unity 6.3, I was able to rewrite the view system mesh generator to use the Burst Job below as in 6.3 Unity have added a new 2d physics engine which supports parallel ray casting operations off the main thread - something the legacy 2d physics engine did not support at all.
+            </p>
+            <p>
+                This enabled me to use Unity's Burst Compiler and C# Job system to write a job that is cross compiled to C++, optimised by LLVM and run in parallel. As a result in the old version of the game, the view system took roughly 2ms to generate the mesh each frame to 0.11ms. (in the old version of the game, the view system took the most time each frame)
+            </p>
+            <p>
+                The indices for the mesh are set at start time and never updated, I use the C# Job System and burst compiler to also set the mesh data into the underlying mesh structure through unity's advanced mesh api, the performance imrovement of this is negligable however and there is no downside to using it.
+            </p>
+            <pre class="code-bg code-member">
+    [<span class="code-class">BurstCompile</span>]
+    <span class="code-keyword">private struct</span> <span class="code-class">ViewMeshGen</span> : <span class="code-interface">IJobParallelFor</span>
+    {
+        [<span class="code-class">ReadOnly</span>] <span class="code-keyword">public</span> <span class="code-struct">PhysicsWorld</span> World;
+        [<span class="code-class">ReadOnly</span>] <span class="code-keyword">public</span> <span class="code-struct">PhysicsQuery</span>.<span class="code-struct">QueryFilter</span> Filter;
+
+        <span class="code-keyword">public</span> <span class="code-struct">Vector2</span> CircleOriginPosition;
+        <span class="code-keyword">public</span> <span class="code-struct">Vector2</span> ConeOriginPosition;
+
+        <span class="code-keyword">public float</span> ConeDistance;
+        <span class="code-keyword">public float</span> CircleRadius;
+
+        <span class="code-keyword">public float</span> ConeAngleDelta;
+        <span class="code-keyword">public float</span> CircleAngleDelta;
+
+        <span class="code-keyword">public float</span> ViewDirectionAngle;
+
+        <span class="code-keyword">public int</span> SplitPoint;
+
+        <span class="code-keyword">public bool</span> CircleOnly;
+
+        [<span class="code-class">NativeDisableParallelForRestriction</span>, <span class="code-class">WriteOnly</span>]
+        <span class="code-keyword">public</span> <span class="code-struct">NativeArray</span><<span class="code-struct">float3</span>> vertices;
+
+        <span class="code-keyword">public void</span> <span class="code-method">Execute</span>(<span class="code-keyword">int</span> <span class="code-local">index</span>)
+        {
+            <span class="code-keyword">bool</span> <span class="code-local">skip</span> <span class="code-operator">=</span> CircleOnly <span class="code-operator">&&</span> <span class="code-local">index</span> <span class="code-operator"><</span> SplitPoint;
+
+            <span class="code-struct">Vector3</span> <span class="code-local">originPosition</span> <span class="code-operator">=</span> ConeOriginPosition;
+            <span class="code-keyword">float</span> <span class="code-local">maxRayDistance</span> <span class="code-operator">=</span> ConeDistance;
+            <span class="code-keyword">float</span> <span class="code-local">angleDelta</span> <span class="code-operator">=</span> ConeAngleDelta;
+
+            <span class="code-control">if</span> (<span class="code-local">index</span> <span class="code-operator">>=</span> SplitPoint)
+            {
+                <span class="code-local">angleDelta</span> <span class="code-operator">=</span> CircleAngleDelta;
+                <span class="code-local">maxRayDistance</span> <span class="code-operator">=</span> CircleRadius;
+                <span class="code-local">originPosition</span> <span class="code-operator">=</span> CircleOriginPosition;
+            }
+
+            <span class="code-keyword">float</span> <span class="code-local">angle</span> <span class="code-operator">=</span> -(<span class="code-local">index</span> <span class="code-operator">*</span> <span class="code-local">angleDelta</span>);
+
+            <span class="code-control">if</span> (<span class="code-local">index</span> <span class="code-operator"><</span> SplitPoint)
+            {
+                <span class="code-local">angle</span> <span class="code-operator">=</span> ViewDirectionAngle <span class="code-operator">-</span> (<span class="code-local">index</span> <span class="code-operator">*</span> <span class="code-local">angleDelta</span>);
+            }
+
+            <span class="code-control">if</span> (<span class="code-operator">!</span><span class="code-local">skip</span>)
+            {
+                <span class="code-struct">float3</span> <span class="code-local">viewDir</span> <span class="code-operator">=</span> <span class="code-method">VectorFromAngle</span>(<span class="code-local">angle</span>);
+                <span class="code-keyword">var</span> <span class="code-local">input</span> <span class="code-operator">=</span> <span class="code-keyword">new</span> <span class="code-struct">PhysicsQuery</span>.<span class="code-struct">CastRayInput</span>()
+                {
+                    origin <span class="code-operator">=</span> <span class="code-local">originPosition</span>,
+                    translation <span class="code-operator">=</span> <span class="code-keyword">new</span> <span class="code-struct">PhysicsRotate</span>((<span class="code-struct">Vector3</span>)<span class="code-local">viewDir</span>).direction <span class="code-operator">*</span> <span class="code-local">maxRayDistance</span>
+                };
+
+                <span class="code-keyword">var</span> <span class="code-local">result</span> <span class="code-operator">=</span> World.<span class="code-method">CastRay</span>(<span class="code-local">input</span>, Filter, <span class="code-struct">PhysicsQuery</span>.<span class="code-interface">WorldCastMode</span>.Closest, <span class="code-interface">Allocator</span>.Temp);
+
+                vertices[<span class="code-local">index</span> <span class="code-operator">+</span> <span class="code-number">1</span>] <span class="code-operator">=</span> <span class="code-local">result</span>.Length <span class="code-operator">></span> <span class="code-number">0</span>
+                <span class="code-operator">?</span> (<span class="code-struct">Vector3</span>)<span class="code-local">result</span>[<span class="code-number">0</span>].point
+                <span class="code-operator">:</span> (<span class="code-struct">float3</span>)<span class="code-local">originPosition</span> <span class="code-operator">+</span> <span class="code-local">viewDir</span> <span class="code-operator">*</span> <span class="code-local">maxRayDistance</span>;
+            }
+            <span class="code-control">else</span>
+            {
+                vertices[<span class="code-local">index</span> <span class="code-operator">+</span> <span class="code-number">1</span>] <span class="code-operator">=</span> <span class="code-local">originPosition</span>;
+            }
+
+            <span class="code-control">if</span> (<span class="code-local">index</span> <span class="code-operator">==</span> <span class="code-number">0</span> || <span class="code-local">index</span> <span class="code-operator">==</span> SplitPoint)
+            {
+                vertices[<span class="code-local">index</span>] <span class="code-operator">=</span> <span class="code-local">originPosition</span>;
+            }
+        }
+
+        [<span class="code-class">MethodImpl</span>(<span class="code-interface">MethodImplOptions</span>.AggressiveInlining)]
+        <span class="code-keyword">private static</span> <span class="code-struct">float3</span> <span class="code-method">VectorFromAngle</span>(<span class="code-keyword">float</span> <span class="code-local">angle</span>)
+        {
+            <span class="code-control">return</span> <span class="code-keyword">new</span> <span class="code-struct">float3</span>(<span class="code-class">math</span>.<span class="code-method">cos</span>((<span class="code-keyword">float</span>)<span class="code-class">math</span>.<span class="code-method">radians</span>(<span class="code-local">angle</span>)), <span class="code-class">math</span>.<span class="code-method">sin</span>((<span class="code-keyword">float</span>)<span class="code-class">math</span>.<span class="code-method">radians</span>(<span class="code-local">angle</span>)), <span class="code-number">0</span>);
+        }
+    }
+            </pre>
             <h2>Shader Pass</h2>
             <p>
-                The first shader pass writes the mesh into a stencil buffer, this texture is then used as a mask for every other step.
+                The first shader pass writes the mesh into a depth buffer, this texture is then used as a mask for every other step.
+                The shader for this is incredibly simple
             </p>
             
             <img class="gallery-screenshot" src="../images/Nightmorn/ViewMask.png" width="48%">
+            <pre class="code-bg">
+    <span class="code-class">Shader</span> "Custom/DepthWrite"
+    <span class="code-member">{</span>
+    	<span class="code-class">Properties</span>
+    	<span class="code-member">{
+    	}</span>
+    		<span class="code-class">SubShader</span>
+    	<span class="code-member">{</span>
+    		<span class="code-class">Tags</span>
+    		<span class="code-member">{</span>
+    			"RenderType" = "Opaque"
+    			"RenderPipeline" = "UniversalPipeline"
+    			"Queue" = "Geometry"
+    		<span class="code-member">}</span>
+
+    		<span class="code-class">Pass</span>
+    		<span class="code-member">{</span><span class="code-class">
+    			Blend Zero One
+    			ZWrite On</span>
+    		<span class="code-member">
+    		}
+    	}
+    }</span>
+            </pre>
+
             <p>
-                
+                The effect is then composited to the main colour attachment through this full screen shader which applies a hue, saturation and intensity operation to the colour of the environment outside of the view texture.
             </p>
+            <img class="gallery-screenshot" src="../images/Nightmorn/ViewEffectsShaderGraph.png" width="100%">
+            <p>
+                There is a fade between the cone and the environment through a gaussian blur.
+            </p>
+            <img class="gallery-screenshot" src="../images/Nightmorn/ViewConeFull.png" width="100%">
+            <p>
+                The sprite cull shader just culls the sprite outside of the view cone, it is used for monsters primiarly.
+            </p>
+            <img class="gallery-screenshot" src="../images/Nightmorn/NightmornSpriteCullA.png" width="48%">
+            <img class="gallery-screenshot" src="../images/Nightmorn/NightmornSpriteCullB.png" width="48%">
 
         </section>
         <section id="-character-equipment">

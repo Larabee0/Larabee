@@ -81,25 +81,25 @@
             {
                 <span class="code-keyword">public</span> <span class="code-class">PathCreator</span> path;
                 [<span class="code-class">Range</span>(<span class="code-number">1</span>, <span class="code-number">50</span>)]
-                <span class="code-keyword">public float</span> resolution = <span class="code-number">1</span>;
+                <span class="code-keyword">public float</span> resolution <span class="code-operator">=</span> <span class="code-number">1</span>;
             
                 <span class="code-keyword">public</span> <span class="code-class">CheckPoint</span> trackerPrefab;
 
                 <span class="code-keyword">public void</span> <span class="code-method">PlaceCheckPoints</span>()
                 {
-                    <span class="code-keyword">float</span> <span class="code-local">length</span> = path.path.length;
-                    <span class="code-keyword">for</span> (<span class="code-keyword">float</span> <span class="code-local">i</span> = <span class="code-number">0</span>; <span class="code-local">i</span> < <span class="code-local">length</span>; <span class="code-local">i</span> += resolution)
+                    <span class="code-keyword">float</span> <span class="code-local">length</span> <span class="code-operator">=</span> path.path.length;
+                    <span class="code-control">for</span> (<span class="code-keyword">float</span> <span class="code-local">i</span> <span class="code-operator">=</span> <span class="code-number">0</span>; <span class="code-local">i</span> < <span class="code-local">length</span>; <span class="code-local">i</span> <span class="code-operator">+=</span> resolution)
                     {
-                        <span class="code-struct">Vector3</span> <span class="code-local">point</span> = path.path.<span class="code-method">GetPointAtDistance</span>(<span class="code-local">i</span>);
-                        <span class="code-struct">Vector3</span> <span class="code-local">dir</span> = <span class="code-local">point</span> - path.path.<span class="code-method">GetPointAtDistance</span>(<span class="code-local">i</span> + resolution);
+                        <span class="code-struct">Vector3</span> <span class="code-local">point</span> <span class="code-operator">=</span> path.path.<span class="code-method">GetPointAtDistance</span>(<span class="code-local">i</span>);
+                        <span class="code-struct">Vector3</span> <span class="code-local">dir</span> <span class="code-operator">=</span> <span class="code-local">point</span> <span class="code-operator">-</span> path.path.<span class="code-method">GetPointAtDistance</span>(<span class="code-local">i</span> <span class="code-operator">+</span> resolution);
                         <span class="code-method">Spawn</span>(<span class="code-local">point</span>, <span class="code-local">dir</span>);
                     }
                 }
             
                 <span class="code-keyword">private void</span> <span class="code-method">Spawn</span>(<span class="code-local"><span class="code-struct">Vector3</span> Pos, <span class="code-struct">Vector3</span> forward</span>)
                 {
-                    <span class="code-class">CheckPoint</span> <span class="code-local">tracker</span> = <span class="code-method">Instantiate</span>(trackerPrefab, <span class="code-local">Pos</span>, <span class="code-struct">Quaternion</span>.identity, <span class="code-local">transform</span>);
-                    <span class="code-local">tracker</span>.transform.forward = <span class="code-local">forward</span>;
+                    <span class="code-class">CheckPoint</span> <span class="code-local">tracker</span> <span class="code-operator">=</span> <span class="code-method">Instantiate</span>(trackerPrefab, <span class="code-local">Pos</span>, <span class="code-struct">Quaternion</span>.identity, <span class="code-local">transform</span>);
+                    <span class="code-local">tracker</span>.transform.forward <span class="code-operator">=</span> <span class="code-local">forward</span>;
                 }
             }</span>
             </pre>
