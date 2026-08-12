@@ -74,7 +74,9 @@
             <p>
                 Nightmorn has a viewcone to restrict each player's view to make the game feel more isolating. The effect has a small circle around the player, and a cone where they are facing.
             </p>
-            <img class="gallery-screenshot" src="../images/Nightmorn/ViewConeFull.png" width="48%">
+            <div class="gallery-flex">
+                <img class="gallery-screenshot" src="../images/Nightmorn/ViewConeFull.png" width="48%">
+            </div>
             <p>
                 The area out side the cone is desaturated, while monsters arent visible at all.
             </p>
@@ -186,6 +188,7 @@
                 The shader for this is incredibly simple
             </p>
             
+            <div class="gallery-flex">
             <img class="gallery-screenshot" src="../images/Nightmorn/ViewMask.png" width="48%">
             <pre class="code-bg">
     <span class="code-class">Shader</span> "Custom/DepthWrite"
@@ -211,32 +214,268 @@
     	}
     }</span>
             </pre>
+            </div>
 
             <p>
                 The effect is then composited to the main colour attachment through this full screen shader which applies a hue, saturation and intensity operation to the colour of the environment outside of the view texture.
             </p>
+            <div class="gallery-flex">
             <img class="gallery-screenshot" src="../images/Nightmorn/ViewEffectsShaderGraph.png" width="100%">
+            </div>
             <p>
                 There is a fade between the cone and the environment through a gaussian blur.
             </p>
-            <img class="gallery-screenshot" src="../images/Nightmorn/ViewConeFull.png" width="100%">
+            <div class="gallery-flex">
+            <img class="gallery-screenshot" src="../images/Nightmorn/ViewConeFull.png">
+            </div>
             <p>
                 The sprite cull shader just culls the sprite outside of the view cone, it is used for monsters primiarly.
             </p>
-            <img class="gallery-screenshot" src="../images/Nightmorn/NightmornSpriteCullA.png" width="48%">
-            <img class="gallery-screenshot" src="../images/Nightmorn/NightmornSpriteCullB.png" width="48%">
-
+            <div class="gallery-flex">
+                <img class="gallery-screenshot" src="../images/Nightmorn/NightmornSpriteCullA.png">
+                <img class="gallery-screenshot" src="../images/Nightmorn/NightmornSpriteCullB.png">
+            </div>
         </section>
-        <section id="-character-equipment">
+        <section id="-character-equipment" class="main-section">
             <h1>The Equipment System</h1>
+            <p>
+                Nightmorn required developing a complex equipment system which had to interopate with the character puppet animation system to allow each piece of equipment its own animations.
+            </p>
             <h2>Types of equipment</h2>
+            <p>
+                There are many types of equipment the player can use, these are broadly split into weapons and utilities.
+                Equipment can also occupy one of both of the character's hands, for example a rapier and a lantern can be wielded at the same time, or just a great axe can be wielded.
+            </p>
+            <p>
+                Players are restricted to 3 pieces of equipment each, 3 one-handed items or 2 one-handed items and a single two handed item.
+            </p>
+            <p>
+                Items could have very complex behaviour, such as the bear trap item - a two handed item a player could put on the ground to trap or brielf trap monsters.
+            </p>
+            <p>
+                Some items require a charge effect (axe swing), some operate instantly (lantern on/off), some have a cool down after use.
+            </p>
+            <p>
+                In the original version of nightmorn the  <a href="https://github.com/Larabee0/Nightmorn/blob/Production/Assets/Scripts/Equipment/Network/PlayerEquipment.cs" target="_blank">PlayerEquipmentMP</a> was a horrible class that handled everything and morthed into this 1800 lines monster with huge confusing selection statements that everyone hated touching because it was certain whatever you did would break something.
+            </p>
+            <p>
+                When we opted to rebuild much of the game, we primiarly chose to because of how inoperable extending the current equipment system was. And without the time pressure of university work, and the knowledge of what was needed to begin with we where able to design and implement a much better system.
+            </p>
+            <div class="gallery-flex">
+
+            
+                <img class="gallery-screenshot" src="../images/Nightmorn/Player Actions System.drawio.svg" width="48%">
+                <img class="gallery-screenshot" src="../images/Nightmorn/Player Equipment System.drawio.svg"width="48%">
+            </div>
+            <p>
+                This new system divided the general equipment system into 3 major classes, animation, equipment handler and actions, we also opted to break equipment down into common building blocks. Two handed items in the old system wherer a single class instance which caused a lot of problems in the old system. In the new system a two handed item is composed of two item instances.
+            </p>
+            <p>
+                One handed items generally had one action they could make, their primary action. When holding two one handed items, one action as the "primary" item and the other as the "secondary" item, left/right click invoked primary/secondary action.
+            </p>
+            <p>
+                Two handed items generally had two actions, they could behave like two one handed items just permently paired together.
+            </p>
+            <p>
+                The addition of the slot container class made life much easier. A slot container represents two pieces of equipment (2x one handed or 1x two handed) and only provided state information used by the rest of the system for animation and action invokcation.
+                When switching equipment a slot contain was replaced by another one to become the active set.
+            </p>
+
             <h2>Interop with Animations</h2>
+            <div class="gallery-flex">
+                <img class="gallery-screenshot" src="../images/Nightmorn/Player Animation System.drawio.svg" width="33%">
+            </div>
+            <p>
+                The general player animation was also significantly overhauled by a colleage, while I handled the bulk of implementation of the equipment handler and action system.
+                The Slot containers are what enabled a significantly more usable animation system interopability however.
+            </p>
         </section>
 
-        <section id="-audio-system">
+        <section id="-audio-system" class="main-section">
             <h1>The Audio System</h1>
+                <p>
+                    The largest major gameplay system I had a big hand in with nightmorn is the new audio system. Like most things, audio play back in the university version of the game was pretty scuffed.
+                </p>
             <h2>Types of sounds</h2>
+                <p>
+                    Games has a few types of sounds and audio that need to be played.
+                </p>
+                <ul>
+                    <li>Monster Sounds</li>
+                    <li>Player equipment Sounds</li>
+                    <li>Character voice lines</li>
+                    <li>Music (Local client)</li>
+                    <li>Environment ambienance (Local client)</li>
+                    <li>UI SFX</li>
+                </ul>
+                <p>
+                    Some of these sounds need to only be heard on the local player's client and not by everyone else. The system I made primarily dealt with Monster and player equipment sounds.
+                </p>
+                <p>
+                    These had the requirement of, in general, being heard by everyone connected to the game. The system I came up used two main pools of Audio emitters, the ServerEmitter pool and the LocalEmitter pool. The ServerEmitter pool is created an managed by the host client (Nightmorn uses a P2P arcitecture with a hosting player everyone else connects to). This pool is taken from to play sounds that are heard on all clients.
+                </p>
+                <p>
+                    As all the monster logic is done on the host, having monster sounds be host originating just made sense. Any sounds Made by the hosting client (to be heard by everyone) is also run through this pool.
+                </p>
+                <p>
+                    The localEmitter pool is created by each connecting client and is primarily for sound latency reduction. A sound made by a client sound be played back immediately for that client without waiting for the command to transact the network stack to the server and back.
+                </p>
+                <p>
+                    So when a sound on a client is requested, it enters the local client's audio manager who immediately plays the sound for the instigating client using a local audio emitter. It also sends a command to the host to play the same sound using a server audio emitter for everyone except the instgiating client. This ensures immediate audio feedback for a player action like a sword swing.
+                </p>
+                <p>
+                    The other purpose this audio system had is as a data input for the monster AI system - the monsters respond to sounds made by players ususally by going to investgate the noise and kill anything they find.
+                </p>
             <h2>Implementation</h2>
+            <p>
+                This struct is the command data sent between the clients and host to cause audio to play for everyone and or alert the AI system. It has support for playing a sounds at a constant position in the world or for playing a sound attached to a gameobject that can move. The struct contains data about the type of sound, used by the AI system to determine how a monster sould respond.
+            </p>
+            <pre class="code-bg code-member">
+    <span class="code-keyword">using</span> Unity.Netcode;
+    <span class="code-keyword">using</span> UnityEngine;
+
+    <span class="code-keyword">public struct</span> <span class="code-struct">AudioEmitterData</span> : <span class="code-interface">INetworkSerializable</span>, <span class="code-interface">IEquatable</span><<span class="code-struct">AudioEmitterData</span>>
+    {
+        <span class="code-keyword">public</span> <span class="code-struct">NetworkObjectReference</span> ParentObject;
+        <span class="code-keyword">public ulong</span> OriginatorPlayerId;
+        <span class="code-keyword">public int</span> LocalEmitterEntityId;
+        <span class="code-keyword">public</span> <span class="code-struct">Vector3</span> Position;
+        <span class="code-keyword">public</span> <span class="code-interface">AudioType</span> Type;
+        <span class="code-keyword">public long</span> ClipId;
+        <span class="code-keyword">public float</span> Volume;
+        <span class="code-keyword">public float</span> Pitch;
+        <span class="code-keyword">public float</span> MinDistance;
+        <span class="code-keyword">public float</span> MaxDistance;
+        <span class="code-keyword">public bool</span> Looping;
+
+        ... additional 16 floats resevered for arbitary data usage
+    }
+            </pre>
+            <p>
+                Below is the audio emitter class that actually commands the audio source to set the clip, play and stop it. There is a local version of this (MonoBehaviour instead of NetworkBehaviour) without the networking functionality and selective muting depending on originaiting player.
+            </p>
+            <pre class="code-bg code-member">
+    <span class="code-keyword">using</span> Unity.Netcode;
+    <span class="code-keyword">using</span> UnityEngine;
+
+    <span class="code-keyword">public class</span> <span class="code-class">AudioEmitter</span> : <span class="code-class">NetworkBehaviour</span>, <span class="code-interface">IAudioEmitter</span>
+    {
+        <span class="code-keyword">public</span> <span class="code-class">AudioSource</span> Source;
+        <span class="code-keyword">private float</span> pitchMark;
+
+        <span class="code-keyword">private bool</span> _returned <span class="code-operator">=</span> <span class="code-keyword">true</span>;
+
+        <span class="code-comment">// playerback of the server clip must not occur on the client that caused the sound, that client plays the clip locally immediately.</span>
+        <span class="code-keyword">private bool</span> _mutePlayerback <span class="code-operator">=</span> <span class="code-keyword">false</span>;
+
+        <span class="code-keyword">public</span> <span class="code-class">AudioEmitter</span> ServerEmitter <span class="code-operator">=></span> <span class="code-keyword">this</span>;
+
+        <span class="code-keyword">public</span> <span class="code-class">NetworkVariable</span><<span class="code-struct">AudioEmitterData</span>> EmitterData <span class="code-operator">=</span> <span class="code-keyword">new</span>(<span class="code-keyword">default</span>, <span class="code-interface">NetworkVariableReadPermission</span>.Everyone, <span class="code-interface">NetworkVariableWritePermission</span>.Server);
+        <span class="code-keyword">public</span> <span class="code-struct">NetworkObjectReference</span> ParentObject <span class="code-operator">=></span> EmitterData.Value.ParentObject;
+        <span class="code-keyword">public</span> <span class="code-interface">AudioType</span> AudioType <span class="code-operator">=></span> EmitterData.Value.Type;
+        <span class="code-keyword">public long</span> ClipId <span class="code-operator">=></span> EmitterData.Value.ClipId;
+        <span class="code-keyword">public float</span> OriginalVolume <span class="code-operator">=></span> EmitterData.Value.Volume;
+        <span class="code-keyword">public float</span> Pitch <span class="code-operator">=></span> EmitterData.Value.Pitch;
+        <span class="code-keyword">public float</span> MinDistance <span class="code-operator">=></span> EmitterData.Value.MinDistance;
+        <span class="code-keyword">public float</span> MaxDistance <span class="code-operator">=></span> EmitterData.Value.MaxDistance;        
+        <span class="code-keyword">public bool</span> Looping <span class="code-operator">=></span> EmitterData.Value.Looping;
+
+        <span class="code-keyword">public override void</span> <span class="code-method">OnNetworkSpawn</span>()
+        {
+            EmitterData.OnValueChanged <span class="code-operator">+=</span> <span class="code-method">OnClipChanged</span>;
+            <span class="code-class">Audio</span>.Instance.OnVolumeChanged <span class="code-operator">+=</span> <span class="code-method">UpdateVolume</span>;
+        }
+
+        <span class="code-keyword">public override void</span> <span class="code-method">OnNetworkDespawn</span>()
+        {
+            <span class="code-class">Audio</span>.Instance.OnVolumeChanged <span class="code-operator">-=</span> <span class="code-method">UpdateVolume</span>;
+            EmitterData.OnValueChanged <span class="code-operator">-=</span> <span class="code-method">OnClipChanged</span>;
+        }
+
+        <span class="code-keyword">public void</span> <span class="code-method">OnClipChanged</span>(<span class="code-struct">AudioEmitterData</span> <span class="code-local">previousValue</span>, <span class="code-struct">AudioEmitterData</span> <span class="code-local">newValue</span>)
+        {
+            _mutePlayerback <span class="code-operator">=</span> <span class="code-local">newValue</span>.OriginatorPlayerId <span class="code-operator">==</span> MPClientManager.LocalClientManager.OwnerClientId;
+
+            <span class="code-control">if</span> (IsServer <span class="code-operator">&&</span> <span class="code-local">newValue</span>.OriginatorPlayerId <span class="code-operator">==</span> NetworkManager.ServerClientId)
+            {
+                _mutePlayerback <span class="code-operator">=</span> <span class="code-keyword">false</span>;
+            }
+
+            <span class="code-control">if</span> (<span class="code-local">newValue</span>.ClipId <span class="code-operator">!=</span> <span class="code-number">0</span>)
+            {
+                <span class="code-method">UpdateVolume</span>();
+                Source.clip <span class="code-operator">=</span> <span class="code-class">Audio</span>.Instance[ClipId];
+                Source.<span class="code-method">Play</span>();
+                <span class="code-control">if</span> (IsServer)
+                {
+                    _returned <span class="code-operator">=</span> <span class="code-keyword">false</span>;
+                }
+            }
+        }
+
+        <span class="code-keyword">private void</span> <span class="code-method">Update</span>()
+        {
+            <span class="code-control">if</span> (IsServer <span class="code-operator">&&</span> !_returned <span class="code-operator">&&</span> !Source.isPlaying)
+            {
+                <span class="code-method">ReturnEmitter</span>();
+            }
+
+            <span class="code-control">if</span> (<span class="code-class">Time</span>.timeScale <span class="code-operator">==</span> <span class="code-number">0</span> <span class="code-operator">&&</span> Source.pitch <span class="code-operator">!=</span> <span class="code-number">0</span>)
+            {
+                pitchMark <span class="code-operator">=</span> Source.pitch;
+                Source.pitch <span class="code-operator">=</span> 0;
+            }
+            <span class="code-control">else if</span> (<span class="code-class">Time</span>.timeScale <span class="code-operator">></span> <span class="code-number">0</span> <span class="code-operator">&&</span> Source.pitch <span class="code-operator">==</span> <span class="code-number">0</span>)
+            {
+                Source.pitch <span class="code-operator">=</span> pitchMark;
+            }
+        }
+
+        <span class="code-keyword">public void</span> <span class="code-method">ReturnEmitter</span>()
+        {
+            <span class="code-class">Audio</span>.Instance.<span class="code-method">ReturnServerEmitter</span>(<span class="code-keyword">this</span>);
+            _returned <span class="code-operator">=</span> <span class="code-keyword">true</span>;
+            Source.clip <span class="code-operator">=</span> <span class="code-keyword">null</span>;
+        }
+
+        <span class="code-keyword">public void</span> <span class="code-method">StopClip</span>()
+        {
+            <span class="code-method">StopAllRpc</span>();
+        }
+
+        [<span class="code-class">Rpc</span>(<span class="code-interface">SendTo</span>.Everyone, DeferLocal <span class="code-operator">=</span> <span class="code-keyword">true</span>)]
+        <span class="code-keyword">private void</span> <span class="code-method">StopAllRpc</span>()
+        {
+            <span class="code-control">if</span> (Source.isPlaying)
+            {
+                Source.<span class="code-method">Stop</span>();
+            }
+        }
+
+        <span class="code-keyword">public void</span> <span class="code-method">UpdateVolume</span>()
+        {
+            <span class="code-control">if</span> (_mutePlayerback)
+            {
+                Source.volume <span class="code-operator">=</span> <span class="code-number">0</span>;
+                <span class="code-control">return</span>;
+            }
+            <span class="code-control">if</span> (ClipId <span class="code-operator">!=</span> <span class="code-number">0</span>)
+            {
+                <span class="code-keyword">var</span> <span class="code-local">volumeArray</span> <span class="code-operator">=</span> <span class="code-class">Audio</span>.Instance.VolumeArray;
+                Source.volume <span class="code-operator">=</span> OriginalVolume <span class="code-operator">*</span> <span class="code-local">volumeArray</span>[(<span class="code-keyword">int</span>)AudioType] <span class="code-operator">*</span> <span class="code-local">volumeArray</span>[<span class="code-number">0</span>];
+                Source.pitch <span class="code-operator">=</span> Pitch;
+                Source.minDistance <span class="code-operator">=</span> MinDistance;
+                Source.maxDistance <span class="code-operator">=</span> MaxDistance;
+                Source.loop <span class="code-operator">=</span> Looping;
+            }
+        }
+
+        <span class="code-keyword">public override void</span> <span class="code-method">OnDestroy</span>()
+        {
+            <span class="code-class">Audio</span>.Instance.OnVolumeChanged <span class="code-operator">-=</span> <span class="code-method">UpdateVolume</span>;
+        }
+    }
+            </pre>
         </section>
 
     </body>

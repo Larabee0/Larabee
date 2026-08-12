@@ -188,6 +188,9 @@ a:active{
 .code-operator{
     color:#B4B4B4;
 }
+.code-comment{
+    color:#608B4E;
+}
 
 .sidenav{
     height: 100%; /* Full-height: remove this if you want "auto" height */
