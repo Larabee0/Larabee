@@ -36,44 +36,174 @@
     </div>
 
         <div class="wide-banner">
-            <img src="../images/wobbletown-banner.gif" width="100%">
+            <img src="../images/Nerfgun/20240521_213325.jpg" width="100%">
         </div>
 
         <section id="-description" class="main-section">
-            <p><b>Skills Used:</b></p>
+            <p><b>Skills Used:</b> C++, C#, Unity, Network Engineering, Eletronics</p>
             <p>
-                <b>Download and play it on itch.io <a href="https://snezelute.itch.io/wobbletown" target="_blank">here</a>!</b>
-                <img class="icon" src="../images/icons/itchio-icon.png">
+                <b>See the project repo <span class="hyper-link"><a href="https://github.com/Larabee0/comp-102-2202796.git" target="_blank">here</a></span>!</b>
+                <img class="icon" src="../images/icons/github-icon.png">
             </p>
             
             <hr>
             <p>
-                
+                The nerfgun is probably my favourite project from university, its very nicely contained and the most fun of the all the projects for as wide an audience as possible.
             </p>
             <p>
-                
+                The project started from the 1st year brief for building a game controller using an arduino uno and making a game desgined for it. The brief was pretty open in what we could do. Most people really didnt like this project because it involved doing eletronics, but eletronics is the first thing I was really good at before I worked out how to program, so I was excited at being able to mesh the two skills together.
             </p>
             <p>
-                
+                I had the idea since basically starting uni that I could create a shooting AR/VR game using a nerfgun and a phone, the concept being that the player uses the nerfgun to aim a virtual alagory in a game world and they could press a real trigger to fire the in game gun.
+            </p>
+            <p>
+                Initially I planned to use a phones's internal gyroscope and accelorameter for aiming but it lacked the fine precision and also had the disadvange of being far from the center of rotation - which made aiming awkward. The solution was to use an external gyroscope and accelorameter attached the the butt of the gun as close as possible to the center of rotation.
             </p>
         </section>
 
+        <section id="reverse-engineering" class="main-section">
+            <h2>Reverse Engineering</h2>
+            <p>
+                The nerfgun I ended up purchasing ended up being an eletric gun quite by accident. This gun used three eletric motors to fire nerfdarts. Two are used to spin up fly wheels to accelerate the darts, one is used to push a dart into the fly wheels.
+            </p>
+            
+            <div class="gallery-flex">
+
+                <img class="gallery-screenshot" src="../images/Nerfgun/Close up image of hte nerfgun control board prior to removal.jpg" width="48%">
+                <img class="gallery-screenshot" src="../images/Nerfgun/close up of internal wiring for the flywheels and top access door cutout switch.jpg" width="48%">
+            </div>
+            <p>
+                The little pcb contains two small mosfets (eletric switch) for switching the motors on and off and takes in all the interlock and trigger inputs. Now, the easiest thing to do would have been to gut the gun and just feed the trigger switch to an arduino that talks to the phone game, but that is lame and boring.
+            </p>
+            <p>
+                I decided to allow the gun to still work, I thought it would be simple to replicate the guns features using an arduino and also be able to send state information to the game, allowing the gun to fire for real when fired in game, but also to have a simple toggle to only firing in game and not for real.
+            </p>
+            <p>
+                And yes, it was quite simple to reverse engineer and replicate the functionality with an arduino. The most complicated part was working out a circuit to interpret the ammo detector LED - which was a simple potential divider.
+            </p>
+            <div class="gallery-flex">
+
+                <img class="gallery-screenshot" src="../images/Nerfgun/Diagram of ammo detector LDR potential dividier circuit.jpg" width="48%">
+            </div>
+            <p>
+                Everything else could be interrepted as "digital inputs" - its either on or off, for the interlock switch and the rate of fire switch.
+            </p>
+        </section>
+
+        <section id="prototype" class="main-section">
+            <h2>Prototyping the Nerfgun Control</h2>
+            <p>
+                Next I moved to prototyping the nerfgun, starting with switching the motors. I got some mosfets and made a test circuit switch turned two leds+resistors on and off.
+            </p>
+            <div class="gallery-flex">
+
+                <img class="gallery-screenshot" src="../images/Nerfgun/circuit.png" width="48%">
+                <video width="48%"controls style="display:block; margin:0 auto;">
+                    <source src="../videos/Nerfgun/1 Mosfet Test-AV1.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <p>
+                Next I ran into a problem with the other inputs and outputs - The ESP8266 micro controller I was using did not have enough I/O pins for what I needed, however i/o boards exist so I got myself a PCF8574 i2c i/o expander and ended up with this final circuit diagram.
+            </p>
+            <div class="gallery-flex">
+
+                <img style="background: white;" class="gallery-screenshot" src="../images/Nerfgun/Electrical Schematic.svg">
+            </div>
+            <p>
+                Note the rotary encoder (SW1) did not end up being used in the project due to time constraits. The encoder I wanted to use to zoom the sniper scope in and out.
+            </p>
+            <p>
+                Annoyingly the PCF8574 does not have pull-up/down resistors for its i/o pins so I ended up having to add 4.7k resistsors to ground. And at this point we arrive a the breadboard physical prototype of everything which is very ugly and complicated. So much so I needed two breadboards!
+            </p>
+            <div class="gallery-flex">
+
+                <img class="gallery-screenshot" src="../images/Nerfgun/DSC_1092.JPG" width="48%">
+                <img class="gallery-screenshot" src="../images/Nerfgun/DSC_1095.JPG" width="48%">
+                <video controls style="display:block; margin:0 auto;"  width="86%">
+                    <source src="../videos/Nerfgun/2 Bread Board Gun Test-AV1.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <p>
+                But it works, the breadboard detects nerfdarts, spins up the fly wheels and can fire them - even if the video showing it is terrible.
+            </p>
+        </section>
         
-        <section id="-gallery" class="main-section">
-            <h2>Gallery</h2>
-            <div class="gallery">
+        <section id="pcb" class="main-section">
+            <h2>Turning it into a PCB</h2>
+            <p>
+                Now that I knew the thing will work I needed to make it more managable and less take up a whole table. A PCB is the answer, or at as far as I go here - some prototyping board.
+            </p>
+            <div class="gallery-flex">
 
-                <img class="gallery-screenshot" src="../images/wobbletown-gallery/wobbletown-screenshot-1.png" width="48%">
+                <img class="gallery-screenshot" src="../images/Nerfgun/Blank Board.JPG" width="48%">
+                <img class="gallery-screenshot" src="../images/Nerfgun/Stage 2 Stack with PCF8574 IO expander Top View.JPG" width="48%">
+                <img class="gallery-screenshot" src="../images/Nerfgun/Stage 2 Stack with PCF8574 IO expander Bottom View.JPG" width="48%">
+                <img class="gallery-screenshot" src="../images/Nerfgun/Stage 2 fully stack.JPG" width="48%">
+            </div>
+            <p>
+                Now with the nerfgun reassmbelled, I got Ben from robotics to drill a hole (cos students arent allow drills) in it for me to pass wires through, then I taped the pcb on and plugged everything in.
+            </p>
+            <div class="gallery-flex">
 
-                <img class="gallery-screenshot" src="../images/wobbletown-gallery/wobbletown-screenshot-2-gifversion.gif" width="45%">
+                <img class="gallery-screenshot" src="../images/Nerfgun/Stage 1 yes it still has wires hanging out.JPG" width="48%">
+                <img class="gallery-screenshot" src="../images/Nerfgun/Stage 3 added the stack and taped it to the side.JPG" width="48%">
+            </div>
+            <p>
+                Is it janky? yes. Did it work? also yes. I lated moved to a more slightly more permanant cardboard box and then to still to this day lego mount.
+            </p>
+        </section>
 
-                <video width="80%"controls style="display:block; margin:0 auto;">
-                    <source src="../videos/wobbletown-demo-1.mp4" type="video/mp4">
+        <section id="game" class="main-section">
+            <h2>The game and motion</h2>
+            <p>
+                Till now I have focused on the hardware and turning the perfectly working nerfgun into the same thing but with a huge chunk of wires and pcbs on the side. The reason for that is the hardware is much more interesting, the game is very simple.
+            </p>
+            <div class="gallery-flex">
+                <img class="gallery-screenshot" src="../images/Nerfgun/Final Game Screenshot.png" width="48%">
+                <img class="gallery-screenshot" src="../images/Nerfgun/DSC_1238.JPG" width="48%">
+            </div>
+            <p>
+                The player is stationary in a room, there is a far wall with targets that appear on it, and targets that raise from the floor. you have a green laser beam aiming sight and some statistics about how well you hit the tragets.
+            </p>
+            <p>
+                You have two cameras, one focused down the nerfguns sniper scope and that you have to phyiscally look down on the real thing, and one shows a wider view to the right of the scope - where most of the phone screen ends up being visible.
+            </p>
+            <p>
+                Comms with the gun is done over wifi using UDP listeners and senders. The ESP8266 micro controller host a wifi network the phone connects to.
+            </p>
+            <p>
+                Below is a demo of the game and also the testing of the gyroscope accelorameter I ended up using - I ended up trying like 4 different ones before finding one that worked well enough.
+            </p>
+            <div class="gallery-flex">
+                <video controls style="display:block; margin:0 auto;"  width="48%">
+                    <source src="../videos/Nerfgun/3 Gyro Test-AV1.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <video controls style="display:block; margin:0 auto;"  width="48%">
+                    <source src="../videos/Nerfgun/4 Game Test (Editor)-AV1.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             </div>
         </section>
-
+        <section id="final" class="main-section">
+            <p>
+                You also see the addition of 3d printer attachments used to attach the phone to the nerfgun in some pictures, but beyond that this was really the whole project.
+            </p>
+            <p>
+                We had to record a video demoing the controller incase we could not get it to work on the day, which is convient for me now.
+            </p>
+            <div class="gallery-flex">
+                <video controls style="display:block; margin:0 auto;"  width="48%">
+                    <source src="../videos/Nerfgun/6 Comp102 Submission Demo-AV1.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <p>
+                I dont think there is any code worth highlighing, but the repo is publicly accessible for those curious. The deployed arduino sketch is badly named so <span class="hyper-link"><a href="https://github.com/Larabee0/comp-102-2202796/blob/master/Arduino/UDPStuff/UDPPrototype/UDPPrototype/UDPPrototype.ino" target="_blank">here</a></span> is a link. Yes the wifi password for the hosted network is in plaintext and is also 12345678, I couldnt work out how to configure an open network/no password network in the time I had - yes I got flamed for this during the assessment viva. In my defence - nearly every arduino sketch with wifi I have seen also does this.
+            </p>
+        </section>
     </body>
 
 </html>
