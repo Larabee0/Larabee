@@ -38,8 +38,7 @@
             <img src="../images/Disseration/50 and 50.png" width="75%">
             <h3>Wide analysis of QSlim Applied to Generated
 Convex Terrain</h3>
-            <p class="main-section">TGS on the left, QSlim on the right. This shows the geometric deviation heat map for 50 subdivisions at 50% of original geometry. Here QSlim performs much better than TGS and that is reflected in
-the heat map with the TGS planet now has much brighter areas while QSlin is very dim and almost entirely all dark blue.</p>
+            <p class="main-section">This is a writeup of the presentation and defence I gave for my bsc dissertation at university</p>
         </div>
 
         <section id="-description" class="main-section">
@@ -52,33 +51,324 @@ the heat map with the TGS planet now has much brighter areas while QSlin is very
             </p>
             
             <hr>
+        </section>
+
+        
+        <section id="-qslim" class="main-section">
+            <h2>Qslim - Mesh Simplifier</h2>
             <p>
-                
+                Qslim is a mesh simplification algorithm first posed by Garland and Heckbert in the 1997 paper "Surface simplification using quadric error matrics".
+                This is done by computing a quadric error matrix for each vertex.
+            </p>
+
+            <div class="gallery-grid" >
+                <figure width="52%">
+                    <img class="gallery-screenshot" src="../images/Disseration/Half-Edge-Contraction-Heckbert.png" width="100%">
+                    <figcaption>Illustraion of a half-edge contarction. Source: M. Garland and P. S. Heckbert, "Surface simplification using quadric error matrics" 1997</figcaption>
+                </figure>
+                <figure width="32%">
+                    <img alt="Image of two wireframe Standford Bunnies. On the left, full resolution bunny @69k tris. The right bunny has been simplified to 999 triangles" src="../images/Disseration/WireFrame Bunnies.png"  width="100%">
+                    <figcaption>Image of two wireframe Standford Bunnies. On the left, full resolution bunny @69k tris. The right bunny has been simplified to 999 triangles. Source: Own work/figcaption>
+                </figure>
+            </div>
+
+            <p>
+                Qslim anyalsises every vertex in a mesh and builds a list of vertices ordered from least to most impactful to shape accuracy to remove. 
             </p>
             <p>
-                
+                These vertices are then removed using half edge contraction until the desired number of vertices has been reached or until the algorithm cannot remove any more vertices without breaking the mesh.
+            </p>
+
+        </section>
+        <section id="-tgs" class="main-section">
+            <h2>Terrain Generation Simplification (TGS)</h2>
+            <p>
+                For this expirement terrian generator samples a noise texture also known as a hieght map for a single float that is proccessed into a distance a vertex in the mesh is offset by.
+                Greater resolution can be achived in terrain meshes by decreasing the distances between vertices. This has the effect of sampling the noise texture at small intervals from the previous samples, which makes the terrain look less blocky and more natural.
+            </p>
+            <div class="gallery-flex">
+                <figure width="300px">
+                    <img src="../images/Disseration/HeightMapPlain.png" width="300px">
+                    <figcaption style="max-width: 300px;"><p>Example heightmap created with<br>Terragan 18/03/2006 Source: Wikipedia</p></figcaption>
+                </figure>
+                <figure>
+                    <img src="../images/Disseration/HeightMapHighSamp.png" width="300px">
+                    <figcaption style="max-width: 300px;"><p>Height frequency sampling example of the heightmap.</p></figcaption>
+                </figure>
+                <figure>
+                    <img src="../images/Disseration/HeightMapLowSamp.png"  width="300px">
+                    <figcaption style="max-width: 300px;"><p>Low frequency sampling of the heightmap</p></figcaption>
+                </figure>
+            </div>
+            <p>
+                Simplifying procedural terrain generated in this way is quite simple, dont generate such a large mesh to start with.
+            </p>
+            <div class="gallery-flex">
+                <figure>
+                    <img src="../images/Disseration/TGSHigh.png">
+                    <figcaption style="max-width: 300px;"><p>Example high frequency terrain (wireframe) Source: Own work</p></figcaption>
+                </figure>
+                <figure>
+                    <img src="../images/Disseration/TGSLow.png">
+                    <figcaption style="max-width: 500px;"><p>Example low frequency terrain (wireframe) Source: Own work</p></figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section id="-hypo" class="main-section">
+            <h2>
+                Hypotheses
+            </h2>
+            <p>
+                In this expirment we tested whether Qslim could produce results that more accurately represented a high frequency terrain mesh than the terrain generator could do at a lower sample rate.
             </p>
             <p>
-                
+                We conducted a wide anaylsis of Qslim evaluating how it handled varied input mesh size and reduction rates to determine which had the largest effect on accuracy.
             </p>
+            <p>
+                We compared Qslim to the TGS algorithm to determine if it always produced more accurate results as we would expect and determined if it was useful tool in games which generated terrain in this manor.
+            </p>
+            <div class="gallery-flex">
+                <figure>
+                    <img src="../images/Disseration/TestGeometrySize.png" width="500px">
+                    <figcaption style="max-width: 525px;"><p>This table shows the various input mesh sizes in triangles and subdivisions. The base mesh is a Goldberg polyhedron consisting of 162 faces, 151 of those hexagons the remaining 11 are pentagons totaling 960 triangles. This base shape has each triangle subdivided a number of times to vary the input mesh size.</p></figcaption>
+                </figure>
+                <figure>
+                    <img src="../images/Disseration/ReductionLevels.png" width="500px">
+                    <figcaption style="max-width: 525px;"><p>The amount of geometry kept at each reduction level expressed as a % of the original triangles. Source: Own work - research paper</p></figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section id="-quantify" class="main-section">
+            <h2>
+                Quantifying Quality - Geometric Deviation
+            </h2>
+
+            <p>
+                In order to avoid having to ask people what they thought looked better Qslim or TGS, a way of quantifing the quality of each algorithm was needed. We decided to define quality as the accuracy each algorithm was able to maintain compared to a high resolution terrain mesh, with the reasonable assumption being if a high resolution terrain mesh looked the "best" then the best simplification algorithm is the one that manages to best match the original shape.
+            </p>
+            <p>
+                We used Geometric Deviation to determine this. Geometry Deviation is the minimum euclidean distance between each vertex on mesh A and a point on Mesh B, where mesh A is in this case is our high resoltuion referenece mesh and Mesh B is our simplified mesh.
+            </p>
+            
+            <div class="gallery-flex">
+                <figure>
+                    <img src="../images/Disseration/GeometricDev.png" width="500px">
+                    <figcaption style="max-width: 525px;"><p>Author’s Diagram of Geometric Deviation. The red edge lines represent mesh A, the blue lines Mesh B</p></figcaption>
+                </figure>
+                <figure>
+                    <img src="../images/Disseration/Half Edge Contraction Draw Over.png" width="500px">
+                    <figcaption style="max-width: 525px;"><p>Left shows where the blue point (B) would be on Mesh A. Right shows where the two blue vertices from mesh A simplified to the single orange one would fall on Mesh B Source: Original Image from M. Garland and P. S. Heckbert, “Surface simplification using quadric error metrics” 1997, editing by the author</p></figcaption>
+                </figure>
+            </div>
+
+            <p>
+                The point in on mesh B is along the plane of any triangle in Mesh B and the distance to that point is the deviation for the vertex.
+            </p>
+            <p>
+                This process can produces a number for the mean deviation of the whole mesh but the results can also be visualised in a heatmap form where blue shows no deviation and red is the most deviated vertex.
+            </p>
+            
+            <div class="gallery-flex">
+                <figure>
+                    <img src="../images/Disseration/Test Bun.png" width="500px">
+                    <figcaption style="max-width: 525px;"><p>Geometric Devation heatmap (right) produced by calculating the Devation Qslimed standford bunny (left) as compared to the original (right) Source: Own work</p></figcaption>
+                </figure>
+                <figure>
+                    <img src="../images/Disseration/Sphere-CubeMeshDev.png" width="500px">
+                    <figcaption style="max-width: 525px;"><p>Geometruc Deviation heatmap of a sphere compared to a cube, note the four red blobs show the furthest points of the sphere from the cube, while the pole is blue indicating its exactly on the same plane as the cube's top face: Own work</p></figcaption>
+                </figure>
+            </div>
+            
+            <p>
+                This method was created and researched by Michaël Roy, Sebti Foufou, Frédéric Truchetet in Generic "Attribute Deviation Metric for Assessing Mesh Simplification Algorithm Quality" published in IEEE International Conference on Image Processing September 2002.
+            </p>
+        </section>
+
+        <section id="-quantify" class="main-section">
+            <h2>
+                Experiment
+            </h2>
+                
+            <p>The expirment runs through all the subdivision and reducetion rate levels on 10 randomly generated "planet" meshes each with a unique seed. The terrain generation algorithm is deterministic to the seed.</p>
+            <p> There are 10 planets, 10 subdivision levels, 19 reduction rate steps meaning each algorithm is subjected to 1900 discrete tests. 615 600 observations where made across the whole expirment</p>
+            <p>
+                The tests where conducted in a custm vulkan graphics environment and followed this order of operations
+            </p>
+            <div class="gallery-flex">
+                <img class="gallery-screenshot" src="../images/Disseration/Expirment Operations.drawio.svg" width="25%">
+            </div>
+
+        </section>
+
+        <section id="-findings1" class="main-section">
+            <h2>Findings Pt1</h2>
+            <p>These graphs show the comparison for 5-50 subdivisions and 5-55% reduction rate.<br>Lower mean geometric deviation is better.</p>
+            <div class="gallery-flex">
+                <figure>
+                    <img src="../images/Disseration/GraphKey.png" width="500px">
+                </figure>
+                <figure>
+                    <img src="../images/Disseration/5-50_5-55.png" width="1200px">
+                </figure>
+            </div>
+            <p>At 5% input reduction - Qslim produces more devation that TGS in all subdivision cases apart from 5 and 10.</p>
+            <p>Above 35% reduction rate, Qslim out performs TGS at every subdivision level.</p>
+            <p>The results also establish a trend that as reduction rate increases (that is more of the original mesh is kept) Qslim performs almost exponetially better that TGS</p>
+
+        </section>
+
+        
+        <section id="-findings2" class="main-section">
+            <h2>Findings Pt2</h2>
+            <p>These graphs show the comparison for 5-50 subdivisions and 50-95% reduction rate.<br>Lower mean geometric deviation is better.</p>
+            <div class="gallery-flex">
+                <figure>
+                    <img src="../images/Disseration/GraphKey.png" width="500px">
+                </figure>
+                <figure>
+                    <img src="../images/Disseration/5-50_50-95.png" width="1200px">
+                </figure>
+            </div>
+            <p>We continue to see the trend of Qslim doing much better than TGS at higher reduction rates here.</p>
+            <p>You will notice missing results for reduction rates 85, 90 and 95 in subdivision = 5 and missing results for reduction rate 95 in subdivision 10 & 15. This is due to the tests failing.<br> The reason why these tests failed is down to a
+limitation with the terrain generator, which uses a subdivision
+algorithm to divide a shape up to varying levels of fidelity.<br><br>
+This algorithm works by adding vertices along the edges of
+each triangle within the base mesh. A subdivision level of 5
+adds 5 new vertices along each edge in of a triangle in the
+mesh.<br><br>At low input
+resolutions (5–15), there is not enough granularity to subdivide
+a mesh that is equal to 95% of the original mesh, the closest the
+artefact was able to get to the requested percentages that failed
+to produce simplified meshes, was 100%. This is an integer
+rounding problem, it is not possible to subdivide the mesh
+to 4.5, it must be 4 or 5. This creates a stair stepping effect
+that can be seen in multiple places in the data as duplicate
+results.</p>
+            <p>Where the orange line is not visible and hte blue is Qslim did still post a result it was just an order of magnitude smaller than TGS.</p>
+        </section>
+
+        <section id="-findings3" class="main-section">
+            <h2>Findings Pt3</h2>
+            <p>These graphs show the comparison for 5-50 subdivisions and 25-75% reduction rate.<br>Lower mean geometric deviation is better.</p>
+            <div class="gallery-flex">
+                <figure>
+                    <img src="../images/Disseration/GraphKey.png" width="500px">
+                </figure>
+                <figure>
+                    <img src="../images/Disseration/5-50_25-75.png" width="1200px">
+                </figure>
+            </div>
+            <p>These results focus on the most revealing set of tests the 25-75% range at each subdivision level</p>
+            <p>Here we can see QSlim outperforms TGS in almost every case apart from when subdivisions = 5 an 10, where TGS out performs it slightly at 25%, 30% and 25% respecively.</p>
+            <p>We can clearing also see Qslim does much better when the start mesh is larger. It is able to pull geometry out of flat uniform areas while preserving geometry in complex areas</p>
+        </section>
+
+        
+        <section id="-findings4" class="main-section">
+            <h2>Findings Pt4</h2>
+            <p>Heat map visualisations of three different reduction rates at 50 subdivisions</p>
+            <div class="gallery-flex">
+                <figure>
+                    <img src="../images/Disseration/50 and 5 Alt.png" width="1200px">
+                    <figcaption style="max-width: 1200px;"><p>50 Subdivisions @5% of original geometry. Qslim is on the right, TGS is on the left. Qslim is much worse here as the heatmap reflects</p></figcaption>
+                </figure>
+                <figure>
+                    <img src="../images/Disseration/50 and 10.png" width="1200px">
+                    <figcaption style="max-width: 1200px;"><p>50 Subdivisions @10% of original geometry. Qslim is on the right, TGS is on the left. Qslim is still worse here as but they are much more evenly matched</p></figcaption>
+                </figure>
+                <figure>
+                    <img src="../images/Disseration/50 and 50.png" width="1200px">
+                    <figcaption style="max-width: 1200px;"><p>50 Subdivisions @50% of original geometry. Qslim is on the right, TGS is on the left. Qslim is much better than TGS here, the heatmap shows Qlsim is almost completely blue while TGS has lots of tequoise and ligher colours especially around mountains</p></figcaption>
+                </figure>
+            </div>
+        </section>
+
+        
+
+        <section id="-findings5" class="main-section">
+            <h2>Findings Pt5</h2>
+            <p>We can say that Qslim is not better in 100% of cases, however it is better in a vast majority of cases.</p>
+            <p>Reguarding out most impactful questions we ran a linear model to determine what had the largest impact out of our three variables, The simpleification algorithm, the reduction rate and the subdivisions.</p>
+            <div class="gallery-flex">
+                <figure>
+                    <img src="../images/Disseration/PrattAnyalsis.png" width="500px">
+                </figure>
+            </div>
+            <p>From this we can see that Reduction rate has the largest impact on results, this is what we would expect.</p>
+            <p>Next most impactful was the subdivision level again, not unexpected</p>
+            <p>The simplification algorithm had the lowest impact on geometric deviation, but it did have a measurable one. The other factors can be much more impactful.</p>
+        </section>
+
+
+        <section id="-implications" class="main-section">
+            <h2>Implications</h2>
+            <p>From the results we can say that Qslim is ineffective at creating a simplified mesh of 1000 triangles or lower. In these cases it is better to just use the terrain generator.</p>
+            <p>The same is also true if the input mesh is 1000 triangles or lower. Qslim doesn't produce acceptable results with small input meshes</p>
+            <p>However, when simplifying a mesh 1000 triangles is really not very many triangles, at any reasonable triangle count, Qslim produces significantly better results, esepcially if at least 40% of the original mesh is kept</p>
+        </section>
+
+        <section id="-limitations" class="main-section">
+            <h2>Limitations</h2>
+            <p>This anyalsis has some limitations. Starting with the meshes, they arent 1 contiguous mesh they are 162 seperate meshes, the largest indivudal mesh is 15.6k triangles which is relatively low. They are also flatplane meshes - they do not enclose themselves.</p>
+            <p>The TGS algorithm is also limited, it was unable to produce results for 5 test cases due to the subdivision LOD generation.</p>
+            <p>The TGS algorithm is also only showing 1 type of terrain, the results for differnet biomes or terrain generation algorithms may be differnet</p>
+            <p>Finally, we did not measure visual quality, we measured shape presevation accuracy. This does not mean Qslim produced results that actually looked better than TGS, subjectively they may look better or worse. We did not measure this to avoid needing human participants.</p>
+
+            <div class="gallery-flex">
+                <figure>
+                    <img src="../images/Disseration/Ungenerated Shape.png" width="400px">
+                    <figcaption style="max-width: 400px;"><p>Source shape with no terrain generation algorithm applied, with some subdivisions</p></figcaption>
+                </figure>
+            </div>
+        </section>
+
+        
+        <section id="-testing" class="main-section">
+            <h2>Software Testing</h2>
+            <p>Software testing the computing artefact underwent included, custom unit testing for the CLI interface, stress testing and acceptance testing for the automated expirment process, which acculuated 15hrs of uninterrupted running. Finally validation of Qslim was undertaken to ensure it was prodecusing results inline with its creators findings. </p>
+
+            <div class="gallery-flex">
+                <figure>
+                    <img src="../images/Disseration/Unit Tests.png" width="550px">
+                </figure>
+            </div>
+        </section>
+
+        <section id="-snp" class="main-section">
+            <h2>Ehtical COnsiderations</h2>
+            <p>No human participants for this study where needed or used.</p>
+            <p>Environmentally, no data center was needed either, just a desktop computer.</p>
+            <p>All the Software frameworks where appropriately licensed (MIT, GNU GPL, zlib, Apache 2.0 and GPLv3)</p>
+            <p>Algorithms are available online published by the original authors for research and development</p>
+            <p>Some algorithms may have IP controls attached for commerical venture</p>
+            <p>No breaches of the british computing society ethical standards</p>
         </section>
 
         
         <section id="-gallery" class="main-section">
-            <h2>Gallery</h2>
-            <div class="gallery">
-
-                <img class="gallery-screenshot" src="../images/wobbletown-gallery/wobbletown-screenshot-1.png" width="48%">
-
-                <img class="gallery-screenshot" src="../images/wobbletown-gallery/wobbletown-screenshot-2-gifversion.gif" width="45%">
-
-                <video width="80%"controls style="display:block; margin:0 auto;">
-                    <source src="../videos/wobbletown-demo-1.mp4" type="video/mp4">
+            <h2>Collection of demo videos</h2>
+            <div class="gallery-flex">
+                <video class="gallery-screenshot" width="40%"controls autoplay style="display:block; margin:0 auto;" >
+                    <source src="../videos/Dissertation/Visualisation Demo Video-1.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <video class="gallery-screenshot" width="40%"controls autoplay style="display:block; margin:0 auto;" >
+                    <source src="../videos/Dissertation/Demobunnies-1.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <video class="gallery-screenshot" width="40%"controls autoplay style="display:block; margin:0 auto;" >
+                    <source src="../videos/Dissertation/Some Tests Running-1.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <video class="gallery-screenshot" width="40%"controls autoplay style="display:block; margin:0 auto;" >
+                    <source src="../videos/Dissertation/Spherecube-1.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             </div>
         </section>
-
     </body>
 
 </html>

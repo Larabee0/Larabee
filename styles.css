@@ -11,7 +11,7 @@ body {
 h1,h2,h3,th {
     color:#FFB579;
 }
-p,td{
+p,td, ul{
     color:white
 }
 b {
@@ -218,4 +218,8 @@ a:active{
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
+}
+
+ul.bp{
+    list-style-type: disc;
 }
