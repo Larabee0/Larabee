@@ -146,16 +146,6 @@ Convex Terrain</h3>
                 <p>
                     My Disseration project from my 3rd year of university compared a mesh optimisation algorithm called QSlim against running a noise map based terrain generator.
                 </p>
-                <p>
-                    The project compared the accuray of the optimised mesh to a very high sample rate generated mesh - this high sample rate mesh is composed of millions of vertices and is very unoptimised.
-                    QSlim's goal is to min-max geometry to shape accuracy using geometric deviation anaylsis. I compared it to the terrain generator configured to the same number of triangles as QSlim to see which was better able to represent the shape.
-                </p>
-                <p>
-                    The research showed that QSlim could be used to very effectively reduce the geometry of these terrain meshes while maintaining high shape accuracy as compared to the terrain generator at teh same number of triangles.
-                </p>
-                <p>
-                    This would allow savings in GPU memory for the mesh data and time to draw, with minimal sacrifcy to visual quality. However, in real time applications it may be impratical as the implementation of QSlim I used could take multiple minutes to optimise a mesh. Multi-threaded and Compute shader implementations of QSlim exist that are able to optimise a mesh in real time however.
-                </p>
                 </a>
                 
             </div>

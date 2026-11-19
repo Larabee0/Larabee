@@ -36,9 +36,25 @@
 
         <div class="wide-banner">
             <img src="../images/Disseration/50 and 50.png" width="75%">
-            <h3>Wide analysis of QSlim Applied to Generated
-Convex Terrain</h3>
-            <p class="main-section">This is a writeup of the presentation and defence I gave for my bsc dissertation at university</p>
+            <h3>Wide analysis of QSlim Applied to Generated Convex Terrain</h3>
+            <div  class="main-section">
+            <p>This is a writeup of the presentation and defence I gave for my bsc dissertation at university</p>
+            <p>I got a 1st for my disseration, I was told off the record that this was the highest scoring paper in that year group, which was surprising to me, but I have major imposter syndrome</p>
+            <p>This page is supplemtentry to the full research paper pdf avaliable below. I transcribed the presentation/defence I gave into this page but be aware these presentations mainly serve as an opportunity for the university staff to ask questions and get additional context for the actual research papers.</p>
+            <p>Additionally, I transcribed this 2 years after giving the defence and my memory of everything has faded a bit.</p>
+
+            
+                <p>
+                    The project compared the accuray of the optimised mesh to a very high sample rate generated mesh - this high sample rate mesh is composed of millions of vertices and is very unoptimised.
+                    QSlim's goal is to min-max geometry to shape accuracy using geometric deviation anaylsis. I compared it to the terrain generator configured to the same number of triangles as QSlim to see which was better able to represent the shape.
+                </p>
+                <p>
+                    The research showed that QSlim could be used to very effectively reduce the geometry of these terrain meshes while maintaining high shape accuracy as compared to the terrain generator at teh same number of triangles.
+                </p>
+                <p>
+                    This would allow savings in GPU memory for the mesh data and time to draw, with minimal sacrifcy to visual quality. However, in real time applications it may be impratical as the implementation of QSlim I used could take multiple minutes to optimise a mesh. Multi-threaded and Compute shader implementations of QSlim exist that are able to optimise a mesh in real time however.
+                </p>
+            </div>
         </div>
 
         <section id="-description" class="main-section">
